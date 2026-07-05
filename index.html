@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>کالالند - فروشگاه قهوه</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tahoma',sans-serif;background:#f5f5f5;color:#333;direction:rtl}
+header{background:#2c3e50;color:#fff;padding:12px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.banner{background:#f39c12;color:#fff;padding:8px;text-align:center;font-size:12px;font-weight:bold}
+.header-main{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+.logo{color:#f39c12;font-size:16px;font-weight:bold}
+.search-box{flex:1;margin:0 12px;display:flex;align-items:center;background:#fff;border-radius:16px;padding:0 10px}
+.search-box input{border:none;outline:none;padding:6px;width:100%;font-size:12px}
+.menu-btn{background:transparent;border:none;color:#fff;font-size:20px;cursor:pointer}
+.sidebar{position:fixed;top:0;left:0;width:260px;height:100vh;background:#fff;overflow-y:auto;transform:translateX(-100%);transition:transform .3s;z-index:200;padding-top:80px}
+.sidebar.open{transform:translateX(0)}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;top:80px}
+.sidebar.open~.sidebar-overlay{display:block}
+.menu-item{border-bottom:1px solid #eee}
+.menu-main{padding:12px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#fff;border:none;width:100%;text-align:right;font-size:13px;font-weight:500;color:#333;transition:.2s}
+.menu-main:hover{background:#f8f8f8}
+.menu-main.active{background:#fff3e0;color:#f39c12;border-right:3px solid #f39c12}
+.menu-subs{display:none;background:#fafafa}
+.menu-subs.open{display:block}
+.menu-sub{padding:10px 14px 10px 28px;border-bottom:1px solid #f0f0f0;cursor:pointer;font-size:12px;background:#fff;border:none;width:100%;text-align:right;color:#666;transition:.2s;display:flex;justify-content:space-between}
+.menu-sub:hover{background:#f5f5f5;color:#f39c12}
+.menu-subs2{display:none;background:#fff}
+.menu-subs2.open{display:block}
+.menu-sub2{padding:8px 14px 8px 40px;cursor:pointer;font-size:11px;background:#fff;border:none;width:100%;text-align:right;color:#666;border-bottom:1px solid #f8f8f8;transition:.2s}
+.menu-sub2:hover{background:#f5f5f5;color:#f39c12}
+.content{padding:12px;margin-bottom:70px}
+.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.cat{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.cat-circle{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 2px 6px rgba(0,0,0,.1);transition:.2s}
+.cat-circle:hover{transform:scale(1.05)}
+.c1{background:linear-gradient(135deg,#a8d8ea,#aa96da)}
+.c2{background:linear-gradient(135deg,#ffecd2,#fcb69f)}
+.c3{background:linear-gradient(135deg,#ff9a56,#ff6a88)}
+.c4{background:linear-gradient(135deg,#a1c4fd,#c2e59c)}
+.c5{background:linear-gradient(135deg,#fa709a,#fee140)}
+.cat-label{font-size:11px;font-weight:600;text-align:center;line-height:1.3}
+.products-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.product-card{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.08);cursor:pointer;transition:.2s}
+.product-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.product-img{width:100%;height:110px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:40px;position:relative}
+.product-discount{position:absolute;top:5px;right:5px;background:#f39c12;color:#fff;font-size:9px;font-weight:bold;padding:2px 6px;border-radius:3px}
+.product-info{padding:8px}
+.product-name{font-size:11px;font-weight:600;margin-bottom:3px;line-height:1.3}
+.product-cat{font-size:9px;color:#999;margin-bottom:5px}
+.product-footer{display:flex;justify-content:space-between;align-items:center}
+.product-price{font-size:11px;font-weight:bold;color:#f39c12}
+.add-btn{background:#f39c12;color:#fff;border:none;border-radius:5px;width:26px;height:26px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.add-btn:hover{background:#e67e22}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:grid;grid-template-columns:repeat(5,1fr);z-index:150;box-shadow:0 -2px 8px rgba(0,0,0,.08)}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;cursor:pointer;font-size:10px;color:#999;transition:.2s}
+.nav-item.active{color:#f39c12}
+.nav-item-icon{font-size:20px;margin-bottom:2px}
+.nav-item.active::before{content:'';position:absolute;top:0;width:100%;height:2px;background:#f39c12}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.modal-content{background:#fff;width:100%;max-width:500px;border-radius:12px 12px 0 0;max-height:85vh;overflow-y:auto}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#333}
+.modal-body{padding:12px}
+.detail-img{width:100%;height:180px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:70px;margin-bottom:10px;border-radius:8px}
+.detail-name{font-size:16px;font-weight:bold;margin-bottom:3px}
+.detail-price{font-size:18px;font-weight:bold;color:#f39c12;margin-bottom:10px}
+.detail-desc{font-size:12px;color:#666;line-height:1.6;margin-bottom:10px;background:#f8f8f8;padding:8px;border-radius:6px}
+.add-cart-btn{width:100%;background:#f39c12;color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:bold;cursor:pointer;margin-top:10px}
+.cart-item{display:flex;gap:8px;padding:10px 0;border-bottom:1px solid #eee;align-items:flex-start}
+.cart-icon{font-size:28px;background:#f0f0f0;border-radius:6px;width:45px;height:45px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cart-info{flex:1}
+.cart-name{font-size:12px;font-weight:600}
+.cart-meta{font-size:10px;color:#999;margin-top:2px}
+.cart-qty{display:flex;align-items:center;gap:5px;margin-top:4px;font-size:10px}
+.qty-btn{background:#f0f0f0;border:none;border-radius:3px;width:18px;height:18px;cursor:pointer;font-size:11px;font-weight:bold;color:#f39c12}
+.cart-price{font-size:12px;font-weight:bold;color:#f39c12}
+.cart-empty{text-align:center;padding:30px 0;color:#999}
+.cart-total{background:#f8f8f8;border-radius:6px;padding:10px;margin:10px 0}
+.checkout-btn{width:100%;background:#f39c12;color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:bold;cursor:pointer;margin-top:8px}
+.admin-wrap{max-width:1000px;margin:0 auto;padding:16px}
+.admin-header{background:#2c3e50;color:#fff;padding:16px;border-radius:8px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.admin-header button{background:#f39c12;border:none;color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:bold}
+.admin-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.admin-tab{padding:8px 14px;background:#fff;border:1px solid #ddd;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500}
+.admin-tab.active{background:#f39c12;color:#fff;border-color:#f39c12}
+.admin-section{display:none}
+.admin-section.active{display:block}
+.admin-card{background:#fff;border-radius:8px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:12px}
+.admin-card h3{font-size:13px;font-weight:bold;margin-bottom:12px;color:#f39c12}
+.admin-form input{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;margin-bottom:8px;font-size:12px;font-family:Tahoma,sans-serif}
+.admin-btn{background:#f39c12;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:bold;margin-right:6px}
+.login-box{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000}
+.login-box.open{display:flex}
+.login-card{background:#fff;border-radius:12px;padding:24px;text-align:center;width:90%;max-width:300px}
+.login-card h2{font-size:15px;font-weight:bold;margin-bottom:6px}
+.login-card input{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;margin-bottom:10px;font-size:12px;font-family:Tahoma,sans-serif;text-align:center;letter-spacing:3px}
+.login-card button{width:100%;background:#f39c12;color:#fff;border:none;padding:10px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:bold}
+.toast{position:fixed;bottom:80px;right:16px;background:#f39c12;color:#fff;padding:10px 16px;border-radius:20px;font-size:11px;font-weight:bold;z-index:999;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+#storePage{display:block}
+#adminPage{display:none}
+@media(max-width:640px){.categories{grid-template-columns:repeat(2,1fr)}.products-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="storePage">
+<header>
+<div class="banner">📢 تمامی قیمت‌ها به روز شده</div>
+<div class="header-main">
+<div class="logo">☕ کالالند</div>
+<div class="search-box">
+<input type="text" placeholder="جستجو..." oninput="search(this.value)">
+<span style="color:#f39c12">🔍</span>
+</div>
+<button class="menu-btn" onclick="toggleSidebar()">☰</button>
+</div>
+</header>
+
+<div class="sidebar" id="sidebar">
+<div id="menuList"></div>
+<button onclick="openLoginModal()" style="width:100%;padding:12px;border:none;background:#f39c12;color:#fff;cursor:pointer;font-weight:bold;font-size:12px;margin-top:20px">🔐 ورود مدیر</button>
+</div>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<div class="content">
+<div class="categories" id="categories"></div>
+<div id="products"></div>
+</div>
+
+<div class="bottom-nav">
+<div class="nav-item active"><div class="nav-item-icon">🏠</div>خانه</div>
+<div class="nav-item"><div class="nav-item-icon">🗂️</div>دسته‌بندی</div>
+<div class="nav-item"><div class="nav-item-icon">☎️</div>خدمات</div>
+<div class="nav-item"><div class="nav-item-icon">📦</div>سفارشات</div>
+<div class="nav-item" onclick="openCart()"><div class="nav-item-icon">🛒</div>سبد</div>
+</div>
+
+<div class="modal" id="detailModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3>جزئیات</h3>
+<button class="modal-close" onclick="closeModal('detailModal')">✕</button>
+</div>
+<div class="modal-body" id="detailContent"></div>
+</div>
+</div>
+
+<div class="modal" id="cartModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3>🛒 سبد</h3>
+<button class="modal-close" onclick="closeModal('cartModal')">✕</button>
+</div>
+<div class="modal-body" id="cartContent"></div>
+</div>
+</div>
+</div>
+
+<div id="adminPage">
+<div class="admin-wrap">
+<div class="admin-header">
+<h1>☕ پنل مدیریت</h1>
+<button onclick="logout()">خروج</button>
+</div>
+<div class="admin-tabs">
+<button class="admin-tab active" onclick="adminTab(0)">📦 محصولات</button>
+<button class="admin-tab" onclick="adminTab(1)">➕ افزودن</button>
+<button class="admin-tab" onclick="adminTab(2)">⚙️ تنظیمات</button>
+</div>
+<div class="admin-section active" id="adminSec0"><div class="admin-card"><h3>لیست محصولات</h3><div id="adminList"></div></div></div>
+<div class="admin-section" id="adminSec1"><div class="admin-card"><h3>افزودن محصول</h3><div class="admin-form"><input id="pname" placeholder="نام"><input id="pprice" type="number" placeholder="قیمت"><input id="picon" placeholder="آیکون" maxlength="2"><button class="admin-btn" onclick="addProduct()">افزودن</button></div></div></div>
+<div class="admin-section" id="adminSec2"><div class="admin-card"><h3>تنظیمات</h3><label>رمز جدید:</label><input id="newpass" type="password" placeholder="رمز جدید" style="margin-bottom:10px"><button class="admin-btn" onclick="changePass()">تغییر رمز</button></div></div>
+</div>
+</div>
+
+<div class="login-box" id="loginBox">
+<div class="login-card">
+<h2>🔐 ورود</h2>
+<input type="password" id="passInput" placeholder="رمز" onkeydown="if(event.key==='Enter')login()">
+<button onclick="login()">ورود</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DB={get(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}},set(k,v){localStorage.setItem(k,JSON.stringify(v))}};
+let CAT=DB.get('cats',[{id:'c1',name:'اسپرسوساز',icon:'🔧',sub:[{id:'c1a',name:'خانگی'},{id:'c1b',name:'نیمه صنعتی'},{id:'c1c',name:'صنعتی'}]},{id:'c2',name:'آسیاب',icon:'⚡',sub:[{id:'c2a',name:'خانگی'},{id:'c2b',name:'نیمه صنعتی'},{id:'c2c',name:'صنعتی'}]},{id:'c3',name:'قهوه',icon:'☕',sub:[{id:'c3a',name:'تک دان'},{id:'c3b',name:'میکس'},{id:'c3c',name:'پودری'}]},{id:'c4',name:'اکسسوری',icon:'🎁',sub:[]},{id:'c5',name:'تجهیزات',icon:'🔩',sub:[{id:'c5a',name:'بلندر'},{id:'c5b',name:'یخساز'}]}]);
+let PRD=DB.get('prods',[{id:1,name:'اسپرسوساز',cat:'c1a',icon:'🔧',price:4800000,desc:'حرفه‌ای'},{id:2,name:'آسیاب',cat:'c2a',icon:'⚡',price:1250000,desc:'الکتریکی'},{id:3,name:'قهوه عربیکا',cat:'c3a',icon:'☕',price:285000,desc:'تک دان'}]);
+let SET=DB.get('settings',{pass:'1234'});
+let cart=[],search_q='',sel_cat=null;
+const fmt=n=>Number(n).toLocaleString('fa-IR')+' تومان';
+const toast=m=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)};
+const toggleSidebar=()=>document.getElementById('sidebar').classList.toggle('open');
+const closeModal=id=>document.getElementById(id).classList.remove('open');
+const openModal=id=>document.getElementById(id).classList.add('open');
+const openLoginModal=()=>document.getElementById('loginBox').classList.add('open');
+
+function renderMenu(){
+  let h='';
+  CAT.forEach(c=>{
+    h+=`<div class="menu-item">
+      <button class="menu-main" onclick="toggleSub('${c.id}')">${c.icon} ${c.name} <span class="arrow">›</span></button>
+      <div class="menu-subs" id="sub-${c.id}">`;
+    c.sub.forEach(s=>h+=`<button class="menu-sub2" onclick="selCat('${s.id}')">${s.name}</button>`);
+    h+=`</div></div>`;
+  });
+  document.getElementById('menuList').innerHTML=h;
+}
+
+function toggleSub(id){document.getElementById('sub-'+id).classList.toggle('open')}
+
+function selCat(id){sel_cat=id;renderProd();toggleSidebar()}
+
+function renderCat(){
+  const colors=['c1','c2','c3','c4','c5'];
+  let h=CAT.map((c,i)=>`<div class="cat" onclick="selCat('${c.id}')"><div class="cat-circle ${colors[i]}">${c.icon}</div><div class="cat-label">${c.name}</div></div>`).join('');
+  document.getElementById('categories').innerHTML=h;
+}
+
+function renderProd(){
+  let p=PRD;
+  if(sel_cat)p=p.filter(x=>x.cat===sel_cat);
+  if(search_q)p=p.filter(x=>x.name.includes(search_q));
+  let h=p.map(x=>`<div class="product-card" onclick="showDetail(${x.id})"><div class="product-img">${x.icon}</div><div class="product-info"><div class="product-name">${x.name}</div><div class="product-footer"><div class="product-price">${fmt(x.price)}</div><button class="add-btn" onclick="event.stopPropagation();cart.push({...x});toast('✓ اضافه شد')">+</button></div></div></div>`).join('');
+  document.getElementById('products').innerHTML=`<div style="margin-bottom:12px"><h3 style="font-size:14px;margin-bottom:8px;color:#f39c12">🔥 ${sel_cat?'دسته':'همه'}</h3><div class="products-grid">${h}</div></div>`;
+}
+
+function showDetail(id){
+  const p=PRD.find(x=>x.id===id);
+  document.getElementById('detailContent').innerHTML=`
+    <div class="detail-img">${p.icon}</div>
+    <div class="detail-name">${p.name}</div>
+    <div class="detail-price">${fmt(p.price)}</div>
+    <div class="detail-desc">${p.desc}</div>
+    <button class="add-cart-btn" onclick="cart.push({...${JSON.stringify(p)}});closeModal('detailModal');toast('✓ به سبد اضافه شد')">افزودن به سبد</button>`;
+  openModal('detailModal');
+}
+
+function openCart(){
+  let h='';
+  if(cart.length){
+    const tot=cart.reduce((s,x)=>s+x.price,0);
+    h=cart.map((x,i)=>`<div class="cart-item"><div class="cart-icon">${x.icon}</div><div class="cart-info"><div class="cart-name">${x.name}</div><div class="cart-price">${fmt(x.price)}</div></div></div>`).join('');
+    h+=`<div class="cart-total"><strong>مجموع: ${fmt(tot)}</strong></div><button class="checkout-btn" onclick="checkout()">ثبت سفارش</button>`;
+  }else{
+    h='<div class="cart-empty">🛒 سبد خالی است</div>';
+  }
+  document.getElementById('cartContent').innerHTML=h;
+  openModal('cartModal');
+}
+
+function checkout(){alert('سفارش ثبت شد!\nمجموع: '+fmt(cart.reduce((s,x)=>s+x.price,0)));cart=[];closeModal('cartModal')}
+
+function search(q){search_q=q;renderProd()}
+
+function login(){
+  if(document.getElementById('passInput').value===SET.pass){
+    document.getElementById('loginBox').classList.remove('open');
+    document.getElementById('storePage').style.display='none';
+    document.getElementById('adminPage').style.display='block';
+    renderAdmin();
+  }else toast('رمز اشتباه');
+}
+
+function logout(){
+  document.getElementById('adminPage').style.display='none';
+  document.getElementById('storePage').style.display='block';
+  document.getElementById('passInput').value='';
+}
+
+function renderAdmin(){
+  const h=PRD.map(p=>`<div style="display:flex;justify-content:space-between;padding:8px;background:#f8f8f8;margin-bottom:6px;border-radius:6px"><span>${p.icon} ${p.name} - ${fmt(p.price)}</span><button class="admin-btn" onclick="PRD.splice(PRD.indexOf(p),1);DB.set('prods',PRD);renderAdmin();renderProd()">حذف</button></div>`).join('');
+  document.getElementById('adminList').innerHTML=h;
+}
+
+function addProduct(){
+  const name=document.getElementById('pname').value;
+  const price=parseInt(document.getElementById('pprice').value);
+  const icon=document.getElementById('picon').value;
+  if(!name||!price)return toast('اطلاعات را وارد کن');
+  PRD.push({id:Date.now(),name,price,icon,cat:'c1a',desc:''});
+  DB.set('prods',PRD);
+  ['pname','pprice','picon'].forEach(id=>document.getElementById(id).value='');
+  toast('✓ افزودە شد');
+  renderAdmin();
+  renderProd();
+}
+
+function changePass(){
+  const np=document.getElementById('newpass').value;
+  if(!np)return toast('رمز را وارد کن');
+  SET.pass=np;
+  DB.set('settings',SET);
+  document.getElementById('newpass').value='';
+  toast('✓ رمز تغییر یافت');
+}
+
+function adminTab(n){
+  document.querySelectorAll('.admin-section').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.admin-tab').forEach(e=>e.classList.remove('active'));
+  document.getElementById('adminSec'+n).classList.add('active');
+  document.querySelectorAll('.admin-tab')[n].classList.add('active');
+}
+
+renderMenu();
+renderCat();
+renderProd();
+</script>
+</body>
+</html>
